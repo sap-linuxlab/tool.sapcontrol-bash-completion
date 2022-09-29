@@ -1,0 +1,453 @@
+# This is the input configuration for 'completely' (https://github.com/DannyBen/completely)
+# to generate the bash completion script.
+#
+# 1.To generate the completion run: completely generate sapcontrol-completion.yaml sapcontrol.completion
+# 
+# 2. To use it ...
+#
+#
+# v0.1
+#
+# Changelog:    29.09.2022  v0.1  - Starting this huge task
+# 
+# SYNOPSIS
+#     sapcontrol [-prot <protocol>]
+#                [-trace <filename>]
+#                [-debug]
+#                [-user <user> <password>]
+#                [-queryuser]
+#                [-repeat <N> <D>]
+#                [-format <format>]
+#                [-host <hostname>]
+#                [-systempki <profile>]
+#                [-tio <timeout>]
+#                [-tmax <timeout>]
+#                -nr <instance number>
+#                -function <webmethod> [parameter list]
+#
+# OPTIONS
+#     -prot <protocol>
+#         Specify the protocol for the communication with the SAP instance.
+#         Available protocols are:
+#           NI_HTTP     HTTP  using SAP NI sockets (default, prefer Unix domain sockets)
+#           NI_HTTPS    HTTPS using SAP NI sockets (prefer Unix domain sockets)
+#           GSOAP_HTTP  HTTP  using gsoap built-in sockets
+#           WINHTTP     HTTP  using Windows winhttp
+#           WINHTTPS    HTTPS using Windows winhttp
+#           PIPE        Windows named pipes (on Unix same as NI_HTTP)
+#     -trace <filename>
+#         Trace SOAP request/response
+#     -debug
+#         Write local trace to stderr
+#     -user <user> <password>
+#         OS user and password for Webservice authentication
+#     -queryuser 
+#         Query interactively for user and password
+#     -repeat <N> <D>
+#         Repeat webmethod call <N> times (-1=forever) with <D> sec delay
+#     -format <format>
+#         Specify the format for the output of the webmethod.
+#         Available formats are:
+#           list    List output format (default)
+#           script  Script output format
+#           custom  Webmethod specific human readable format (only available for some webmethods)
+#     -host <hostname>
+#         Host to connect to (default: localhost)
+#     -systempki <profile>
+#         Use system pki from profile configuration to connect using HTTPS
+#         and authenticate with instance PSE certificate defined by profile
+#     -tio <timeout>
+#         Specify network I/O timeout in sec (default: 0 (blocking/infinite))
+#     -tmax <timeout>
+#         Specify max processing timeout in sec (default: 0 (infinite))
+# WEBMETHODS
+#     Start [runlevel]
+#     InstanceStart <hostname> <instance number> [<runlevel>]
+#     Bootstrap [<hostname> <instance number>]
+#     Stop [softtimeout sec]
+#     InstanceStop <hostname> <instance number> [<softtimeout sec>]
+#     Shutdown
+#     RestartInstance [<softtimeout sec> [<runlevel>]]
+#     StopService
+#     StartService <SID>
+#     RestartService
+#     ParameterValue [<parameter>]
+#     GetStartProfile
+#     GetTraceFile
+#     ListConfigFiles
+#     ReadConfigFile <filename>
+#     GetAlertTree
+#     GetAlerts
+#     GetEnvironment
+#     GetVersionInfo
+#     GetQueueStatistic
+#     GetProcessList
+#     GetInstanceProperties
+#     ListDeveloperTraces
+#     ReadDeveloperTrace <filename> <filesize>
+#     ListLogFiles
+#     ReadLogFile <filename> [<filter> [<language> [<maxentries> [<cookie>]]]]
+#     AnalyseLogFiles [<severity 0..2> [<maxentries>
+#         [<starttime YYYY MM DD HH:MM:SS> <endtime YYYY MM DD HH:MM:SS>]]]
+#     ConfigureLogFileList set|add|remove [<filename1> <filename2>... <filenameN>]
+#     GetLogFileList
+#     CreateSnapshot [<description> [<datcol_param> [<analyse_severity -1..2>
+#         [<analyse_maxentries> [<analyse_starttime YYYY MM DD HH:MM:SS>
+#         <analyse_endtime YYYY MM DD HH:MM:SS> [<maxentries>
+#         [<filename1> ... <filenameN>]]]]]]]
+#     ReadSnapshot <filename> [<local filename>]
+#     ListSnapshots
+#     DeleteSnapshots <filename1> [<filename2>... <filenameN>]
+#     GetAccessPointList
+#     GetProcessParameter <processtype> [pid]
+#     SetProcessParameter <processtype> <pid> <parameter> <value1>
+#         [<value2> ... <valueN>]
+#     SetProcessParameter2 <processtype> <pid> [DYNAMIC|PERSIST|DYNAMIC_PERSIST] <parameter> <value1>
+#         [<value2> ... <valueN>]
+#     CheckParameter [<profile> [<default profile>]]
+#     OSExecute <command> <async> <timeout> <protocolfile>
+#     SendSignal <pid> <signal>
+#     GetCallstack <pid>
+#     GetSystemInstanceList [<timeout sec>]
+#     StartSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level>
+#         [<waittimeout sec> [<runlevel>]]]
+#     StopSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level>
+#         [<waittimeout sec> [<softtimeout sec>]]]
+#     RestartSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level>
+#         [<waittimeout sec> [<softtimeout sec> [<runlevel>]]]]
+#     GetSystemUpdateList 
+#     UpdateSystem [<waittimeout sec> [<softtimeout sec> [<force>]]]
+#     UpdateSCSInstance
+#     CheckUpdateSystem
+#     AccessCheck <function>
+#     GetSecNetworkId <service_ip> <service_port> [<version> [<challenge>]]
+#     GetNetworkId <service_ip> <service_port> [<version>]
+#     RequestLogonFile <user>
+#     UpdateSystemPKI [<force>]
+#     UpdateInstancePSE [<force>]
+#     StorePSE <server filename> <local filename> [<psemode> [<overwrite>]]
+#     DeletePSE <filename>
+#     CheckPSE <server filename> <local filename>
+#     CreatePSECredential <server filename> <pin>
+#     HACheckConfig
+#     HACheckFailoverConfig
+#     HAGetFailoverConfig
+#     HAFailoverToNode <node>
+#     HASetMaintenanceMode [<mode> [<instance_only>]]
+#     HACheckMaintenanceMode [<instance_only>]
+#     ABAPReadSyslog
+#     ABAPReadRawSyslog
+#     ABAPGetWPTable
+#     ABAPGetComponentList
+#     ABAPCheckRFCDestinations
+#     ABAPGetSystemWPTable [<activeonly>]
+#     ABAPSetServerInactive [<inactive>]
+#     J2EEControlProcess <processname> <function>
+#     J2EEControlCluster <processname> <function> [<hostname> <instance number>]
+#     J2EEEnableDbgSession <client> [<processname> <debugflags>]
+#     J2EEDisableDbgSession <debugkey>
+#     J2EEGetProcessList
+#     J2EEGetProcessList2
+#     J2EEGetThreadList
+#     J2EEGetThreadList2
+#     J2EEGetThreadCallStack [<threadindex>]
+#     J2EEGetThreadTaskStack [<threadindex>]
+#     J2EEGetSessionList
+#     J2EEGetCacheStatistic
+#     J2EEGetCacheStatistic2
+#     J2EEGetApplicationAliasList
+#     J2EEGetComponentList
+#     J2EEControlComponents <process name> <operation> <componenttype>
+#         <componentname1>,...,<componentnameN>
+#     J2EEGetWebSessionList
+#     J2EEGetWebSessionList2
+#     J2EEGetEJBSessionList
+#     J2EEGetRemoteObjectList
+#     J2EEGetVMGCHistory
+#     J2EEGetVMGCHistory2
+#     J2EEGetVMHeapInfo
+#     J2EEGetClusterMsgList
+#     J2EEGetSharedTableInfo
+#     ICMGetThreadList
+#     ICMGetConnectionList
+#     ICMGetProxyConnectionList
+#     ICMGetCacheEntries
+#     WebDispGetServerList
+#     WebDispGetGroupList
+#     WebDispGetVirtHostList
+#     WebDispGetUrlPrefixList
+#     EnqGetStatistic
+#     EnqGetLockTable
+#     EnqRemoveUserLocks <user>
+#     GWGetConnectionList
+#     GWGetClientList
+#     GWCancelConnections <connection1> ... <connectionN>
+#     GWDeleteConnections <connection1> ... <connectionN>
+#     GWDeleteClients <client1> ... <clientN>
+#     StartWait <timeout sec> <delay sec> [<runlevel>]
+#     StopWait <timeout sec> <delay sec>
+#     WaitforStarted <timeout sec> <delay sec>
+#     WaitforStopped <timeout sec> <delay sec>
+#     RestartServiceWait <timeout sec> <delay sec>
+#     WaitforServiceStarted <timeout sec> <delay sec>
+#     CheckHostAgent
+#     CheckSystemCertificates <verifcation pse>
+
+
+sapcontrol: 
+  - -prot
+  - -trace
+  - -debug
+  - -user
+  - -queryuser
+  - -repeat
+  - -format
+  - -host
+  - -systempki
+  - -tio
+  - -tmax
+  - -nr
+  - -function
+
+sapcontrol *-prot:
+  - NI_HTTP
+  - NI_HTTPS
+  - GSOAP_HTTP
+  - WINHTTP
+  - WINHTTPS
+  - PIPE
+
+sapcontrol *-trace:
+  - <file>
+
+sapcontrol *-user:
+  - <user>
+
+# WE NEED A CLEVER SOLUTION FOR THIS....
+# -user <user> <password>
+# sapcontrol *-user *:
+#   - $(openssl rand -base64 12)
+
+# sapcontrol *-user * *:
+#   - $()
+
+# -repeat expects two values [-repeat <N> <D>]
+sapcontrol *-repeat:
+  - $(echo '-1' {0..20})  # -1 is missing, need to be fixed; list gets resorted by bash.... :-/
+
+sapcontrol *-format:
+  - list
+  - script
+  - custom
+
+sapcontrol *-host:
+  - <hostname>
+
+sapcontrol *-systempki:
+  - PROFILE 
+# Not clear, what this means:   
+#         Use system pki from profile configuration to connect using HTTPS
+#         and authenticate with instance PSE certificate defined by profile
+
+sapcontrol *-tio:
+  - $(echo {0..20})  # fixing bloody sorting by bash if possible...
+
+sapcontrol *-tmax:
+  - $(echo {0..20})  # fixing bloody sorting by bash if possible...
+
+sapcontrol *-nr:
+  - '1'
+  - '2'
+  - '3'
+
+sapcontrol *-function:
+  - Start
+  - InstanceStart
+  - Bootstrap
+  - Stop
+  - InstanceStop
+  - Shutdown
+  - RestartInstance
+  - StopService
+  - StartService
+  - RestartService
+  - ParameterValue
+  - GetStartProfile
+  - GetTraceFile
+  - ListConfigFiles
+  - ReadConfigFile
+  - GetAlertTree
+  - GetAlerts
+  - GetEnvironment
+  - GetVersionInfo
+  - GetQueueStatistic
+  - GetProcessList
+  - GetInstanceProperties
+  - ListDeveloperTraces
+  - ReadDeveloperTrace
+  - ListLogFiles
+  - ReadLogFile
+  - AnalyseLogFiles
+  - ConfigureLogFileList
+  - GetLogFileList
+  - CreateSnapshot
+  - ReadSnapshot
+  - ListSnapshots
+  - DeleteSnapshots
+  - GetAccessPointList
+  - GetProcessParameter
+  - SetProcessParameter
+  - SetProcessParameter2
+  - CheckParameter
+  - OSExecute
+  - SendSignal
+  - GetCallstack
+  - GetSystemInstanceList
+  - StartSystem
+  - StopSystem
+  - RestartSystem
+  - GetSystemUpdateList 
+  - UpdateSystem
+  - UpdateSCSInstance
+  - CheckUpdateSystem
+  - AccessCheck
+  - GetSecNetworkId
+  - GetNetworkId
+  - RequestLogonFile
+  - UpdateSystemPKI
+  - UpdateInstancePSE
+  - StorePSE
+  - DeletePSE
+  - CheckPSE
+  - CreatePSECredential
+  - HACheckConfig
+  - HACheckFailoverConfig
+  - HAGetFailoverConfig
+  - HAFailoverToNode
+  - HASetMaintenanceMode
+  - HACheckMaintenanceMode
+  - ABAPReadSyslog
+  - ABAPReadRawSyslog
+  - ABAPGetWPTable
+  - ABAPGetComponentList
+  - ABAPCheckRFCDestinations
+  - ABAPGetSystemWPTable
+  - ABAPSetServerInactive
+  - J2EEControlProcess
+  - J2EEControlCluster
+  - J2EEEnableDbgSession
+  - J2EEDisableDbgSession
+  - J2EEGetProcessList
+  - J2EEGetProcessList2
+  - J2EEGetThreadList
+  - J2EEGetThreadList2
+  - J2EEGetThreadCallStack
+  - J2EEGetThreadTaskStack
+  - J2EEGetSessionList
+  - J2EEGetCacheStatistic
+  - J2EEGetCacheStatistic2
+  - J2EEGetApplicationAliasList
+  - J2EEGetComponentList
+  - J2EEControlComponents
+  - J2EEGetWebSessionList
+  - J2EEGetWebSessionList2
+  - J2EEGetEJBSessionList
+  - J2EEGetRemoteObjectList
+  - J2EEGetVMGCHistory
+  - J2EEGetVMGCHistory2
+  - J2EEGetVMHeapInfo
+  - J2EEGetClusterMsgList
+  - J2EEGetSharedTableInfo
+  - ICMGetThreadList
+  - ICMGetConnectionList
+  - ICMGetProxyConnectionList
+  - ICMGetCacheEntries
+  - WebDispGetServerList
+  - WebDispGetGroupList
+  - WebDispGetVirtHostList
+  - WebDispGetUrlPrefixList
+  - EnqGetStatistic
+  - EnqGetLockTable
+  - EnqRemoveUserLocks <user>
+  - GWGetConnectionList
+  - GWGetClientList
+  - GWCancelConnections
+  - GWDeleteConnections
+  - GWDeleteClients
+  - StartWait
+  - StopWait
+  - WaitforStarted
+  - WaitforStopped
+  - RestartServiceWait
+  - WaitforServiceStarted
+  - CheckHostAgent
+  - CheckSystemCertificates
+
+
+# HERE COMES THE IMPLEMENTATION OF THE FUNCTIONS
+#
+# sapcontrol *-function Start:
+#   - $(echo {0..6})    # what does 'runlevel' means in theis context?
+#
+#  Need implementation:
+#
+#   - InstanceStart <hostname> <instance number> [<runlevel>]
+#   - Bootstrap [<hostname> <instance number>]
+#   - Stop [softtimeout sec]
+#   - InstanceStop <hostname> <instance number> [<softtimeout sec>]
+#   - RestartInstance [<softtimeout sec> [<runlevel>]]
+#   - StartService <SID>
+#   - ParameterValue [<parameter>]
+#   - ReadConfigFile <filename>
+#   - ReadDeveloperTrace <filename> <filesize>
+#   - ReadLogFile <filename> [<filter> [<language> [<maxentries> [<cookie>]]]]
+#   - AnalyseLogFiles [<severity 0..2> [<maxentries> [<starttime YYYY MM DD HH:MM:SS> <endtime YYYY MM DD HH:MM:SS>]]] 
+#   - ConfigureLogFileList set|add|remove [<filename1> <filename2>... <filenameN>]
+#   - CreateSnapshot [<description> [<datcol_param> [<analyse_severity -1..2> [<analyse_maxentries> [<analyse_starttime YYYY MM DD HH:MM:SS> <analyse_endtime YYYY MM DD HH:MM:SS> [<maxentries> [<filename1> ... <filenameN>]]]]]]]
+#   - ReadSnapshot <filename> [<local filename>]
+#   - DeleteSnapshots <filename1> [<filename2>... <filenameN>]
+#   - GetProcessParameter <processtype> [pid]
+#   - SetProcessParameter <processtype> <pid> <parameter> <value1> [<value2> ... <valueN>]
+#   - SetProcessParameter2 <processtype> <pid> [DYNAMIC|PERSIST|DYNAMIC_PERSIST] <parameter> <value1> [<value2> ... <valueN>]
+#   - CheckParameter [<profile> [<default profile>]]
+#   - OSExecute <command> <async> <timeout> <protocolfile>
+#   - SendSignal <pid> <signal>
+#   - GetCallstack <pid>
+#   - GetSystemInstanceList [<timeout sec>]
+#   - StartSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<runlevel>]]]
+#   - StopSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<softtimeout sec>]]]
+#   - RestartSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<softtimeout sec> [<runlevel>]]]]
+#   - UpdateSystem [<waittimeout sec> [<softtimeout sec> [<force>]]]
+#   - AccessCheck <function>
+#   - GetSecNetworkId <service_ip> <service_port> [<version> [<challenge>]]
+#   - GetNetworkId <service_ip> <service_port> [<version>]
+#   - RequestLogonFile <user>
+#   - UpdateSystemPKI [<force>]
+#   - UpdateInstancePSE [<force>]
+#   - StorePSE <server filename> <local filename> [<psemode> [<overwrite>]]
+#   - DeletePSE <filename>
+#   - CheckPSE <server filename> <local filename>
+#   - CreatePSECredential <server filename> <pin>
+#   - HAFailoverToNode <node>
+#   - HASetMaintenanceMode [<mode> [<instance_only>]]
+#   - HACheckMaintenanceMode [<instance_only>]
+#   - ABAPGetSystemWPTable [<activeonly>]
+#   - ABAPSetServerInactive [<inactive>]
+#   - J2EEControlProcess <processname> <function>
+#   - J2EEControlCluster <processname> <function> [<hostname> <instance number>]
+#   - J2EEEnableDbgSession <client> [<processname> <debugflags>]
+#   - J2EEDisableDbgSession <debugkey>
+#   - J2EEGetThreadCallStack [<threadindex>]
+#   - J2EEGetThreadTaskStack [<threadindex>]
+#   - J2EEControlComponents <process name> <operation> <componenttype> <componentname1>,...,<componentnameN>
+#   - EnqRemoveUserLocks <user>
+#   - GWCancelConnections <connection1> ... <connectionN>
+#   - GWDeleteConnections <connection1> ... <connectionN>
+#   - GWDeleteClients <client1> ... <clientN>
+#   - StartWait <timeout sec> <delay sec> [<runlevel>]
+#   - StopWait <timeout sec> <delay sec>
+#   - WaitforStarted <timeout sec> <delay sec>
+#   - WaitforStopped <timeout sec> <delay sec>
+#   - RestartServiceWait <timeout sec> <delay sec>
+#   - WaitforServiceStarted <timeout sec> <delay sec>
+#   - CheckSystemCertificates <verifcation pse>
