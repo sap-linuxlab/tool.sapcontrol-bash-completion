@@ -1,7 +1,10 @@
 # This is the input configuration for 'completely' (https://github.com/DannyBen/completely)
 # to generate the bash completion script.
+# Sadly `completely` has limitations in the YAML configuration, making it impossible to have complex
+# arguments (more then one argument for an option). Therefore completion of options like `-repeat`
+# or `user` is only partially possible.
 #
-# 1.To generate the completion run: completely generate sapcontrol-completion.yaml sapcontrol.completion
+# 1. To generate the completion run: completely generate sapcontrol-completion.yaml sapcontrol.completion
 # 
 # 2. To use it ...
 #
@@ -194,7 +197,7 @@
 #     CheckSystemCertificates <verifcation pse>
 
 
-sapcontrol: 
+sapcontrol: &base 
   - -prot
   - -trace
   - -debug
@@ -220,20 +223,13 @@ sapcontrol *-prot:
 sapcontrol *-trace:
   - <file>
 
+# Currently we only suggest users, but not passwords ('-user <user> <password>')', due to `completely` limitations.
 sapcontrol *-user:
   - <user>
 
-# WE NEED A CLEVER SOLUTION FOR THIS....
-# -user <user> <password>
-# sapcontrol *-user *:
-#   - $(openssl rand -base64 12)
-
-# sapcontrol *-user * *:
-#   - $()
-
-# -repeat expects two values [-repeat <N> <D>]
+# Currently we only support '<N>', but not '<D>' ('-repeat <N> <D>'), due to `completely` limitations. 
 sapcontrol *-repeat:
-  - $(echo '-1' {0..20})  # -1 is missing, need to be fixed; list gets resorted by bash.... :-/
+  - $(echo '\-1' {1..9})
 
 sapcontrol *-format:
   - list
@@ -243,17 +239,18 @@ sapcontrol *-format:
 sapcontrol *-host:
   - <hostname>
 
-sapcontrol *-systempki:
-  - PROFILE 
 # Not clear, what this means:   
-#         Use system pki from profile configuration to connect using HTTPS
-#         and authenticate with instance PSE certificate defined by profile
+# > Use system pki from profile configuration to connect using HTTPS
+# > and authenticate with instance PSE certificate defined by profile
+# Because I saw in example with a file, I just added file suggestion here.
+sapcontrol *-systempki:
+  - <file>  
 
 sapcontrol *-tio:
-  - $(echo {0..20})  # fixing bloody sorting by bash if possible...
+  - $(echo {0..9})
 
 sapcontrol *-tmax:
-  - $(echo {0..20})  # fixing bloody sorting by bash if possible...
+  - $(echo {0..920})
 
 sapcontrol *-nr:
   - '1'
@@ -383,22 +380,21 @@ sapcontrol *-function:
   - CheckHostAgent
   - CheckSystemCertificates
 
+sapcontrol *-function StartService:
+  - $([ -e /usr/sap ] && find /usr/sap/ -maxdepth 1 -name '[A-Z0-9][A-Z0-9][A-Z0-9]' -type d -printf '%P')  # Determine <SID>
 
-# HERE COMES THE IMPLEMENTATION OF THE FUNCTIONS
+sapcontrol *-function ReadConfigFile:
+  - <file>
+
+# THESE FUNCTIONS LACK THE PARAMETER IMPLEMENTATION:
 #
-# sapcontrol *-function Start:
-#   - $(echo {0..6})    # what does 'runlevel' means in theis context?
-#
-#  Need implementation:
-#
+#   - Start [runlevel]
 #   - InstanceStart <hostname> <instance number> [<runlevel>]
 #   - Bootstrap [<hostname> <instance number>]
 #   - Stop [softtimeout sec]
 #   - InstanceStop <hostname> <instance number> [<softtimeout sec>]
 #   - RestartInstance [<softtimeout sec> [<runlevel>]]
-#   - StartService <SID>
 #   - ParameterValue [<parameter>]
-#   - ReadConfigFile <filename>
 #   - ReadDeveloperTrace <filename> <filesize>
 #   - ReadLogFile <filename> [<filter> [<language> [<maxentries> [<cookie>]]]]
 #   - AnalyseLogFiles [<severity 0..2> [<maxentries> [<starttime YYYY MM DD HH:MM:SS> <endtime YYYY MM DD HH:MM:SS>]]] 

@@ -28,12 +28,12 @@ _sapcontrol_completions() {
   local compline="${compwords[*]}"
 
   case "$compline" in
-    ''*'-function Start')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "$(echo {0..6}) InstanceStart <hostname> <instance number> [<runlevel>] Bootstrap [<hostname> <instance number>] Stop [softtimeout sec] InstanceStop <hostname> <instance number> [<softtimeout sec>] RestartInstance [<softtimeout sec> [<runlevel>]] StartService <SID> ParameterValue [<parameter>] ReadConfigFile <filename> ReadDeveloperTrace <filename> <filesize> ReadLogFile <filename> [<filter> [<language> [<maxentries> [<cookie>]]]] AnalyseLogFiles [<severity 0..2> [<maxentries> [<starttime YYYY MM DD HH:MM:SS> <endtime YYYY MM DD HH:MM:SS>]]] ConfigureLogFileList set|add|remove [<filename1> <filename2>... <filenameN>] CreateSnapshot [<description> [<datcol_param> [<analyse_severity -1..2> [<analyse_maxentries> [<analyse_starttime YYYY MM DD HH:MM:SS> <analyse_endtime YYYY MM DD HH:MM:SS> [<maxentries> [<filename1> ... <filenameN>]]]]]]] ReadSnapshot <filename> [<local filename>] DeleteSnapshots <filename1> [<filename2>... <filenameN>] GetProcessParameter <processtype> [pid] SetProcessParameter <processtype> <pid> <parameter> <value1> [<value2> ... <valueN>] SetProcessParameter2 <processtype> <pid> [DYNAMIC|PERSIST|DYNAMIC_PERSIST] <parameter> <value1> [<value2> ... <valueN>] CheckParameter [<profile> [<default profile>]] OSExecute <command> <async> <timeout> <protocolfile> SendSignal <pid> <signal> GetCallstack <pid> GetSystemInstanceList [<timeout sec>] StartSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<runlevel>]]] StopSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<softtimeout sec>]]] RestartSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<softtimeout sec> [<runlevel>]]]] UpdateSystem [<waittimeout sec> [<softtimeout sec> [<force>]]] AccessCheck <function> GetSecNetworkId <service_ip> <service_port> [<version> [<challenge>]] GetNetworkId <service_ip> <service_port> [<version>] RequestLogonFile <user> UpdateSystemPKI [<force>] UpdateInstancePSE [<force>] StorePSE <server filename> <local filename> [<psemode> [<overwrite>]] DeletePSE <filename> CheckPSE <server filename> <local filename> CreatePSECredential <server filename> <pin> HAFailoverToNode <node> HASetMaintenanceMode [<mode> [<instance_only>]] HACheckMaintenanceMode [<instance_only>] ABAPGetSystemWPTable [<activeonly>] ABAPSetServerInactive [<inactive>] J2EEControlProcess <processname> <function> J2EEControlCluster <processname> <function> [<hostname> <instance number>] J2EEEnableDbgSession <client> [<processname> <debugflags>] J2EEDisableDbgSession <debugkey> J2EEGetThreadCallStack [<threadindex>] J2EEGetThreadTaskStack [<threadindex>] J2EEControlComponents <process name> <operation> <componenttype> <componentname1>,...,<componentnameN> EnqRemoveUserLocks <user> GWCancelConnections <connection1> ... <connectionN> GWDeleteConnections <connection1> ... <connectionN> GWDeleteClients <client1> ... <clientN> StartWait <timeout sec> <delay sec> [<runlevel>] StopWait <timeout sec> <delay sec> WaitforStarted <timeout sec> <delay sec> WaitforStopped <timeout sec> <delay sec> RestartServiceWait <timeout sec> <delay sec> WaitforServiceStarted <timeout sec> <delay sec> CheckSystemCertificates <verifcation pse>")" -- "$cur" )
+    ''*'-function StartService')
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "$([ -e /usr/sap ] && find /usr/sap/ -maxdepth 1 -name '[A-Z0-9][A-Z0-9][A-Z0-9]' -type d -printf '%P')")" -- "$cur" )
       ;;
 
     ''*'-systempki')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "PROFILE")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -A file -- "$cur" )
       ;;
 
     ''*'-function')
@@ -41,7 +41,7 @@ _sapcontrol_completions() {
       ;;
 
     ''*'-repeat')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "$(echo '-1' {0..20})")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "$(echo '\-1' {1..9})")" -- "$cur" )
       ;;
 
     ''*'-format')
@@ -65,11 +65,11 @@ _sapcontrol_completions() {
       ;;
 
     ''*'-tmax')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "$(echo {0..20})")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "$(echo {0..920})")" -- "$cur" )
       ;;
 
     ''*'-tio')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "$(echo {0..20})")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_sapcontrol_completions_filter "$(echo {0..9})")" -- "$cur" )
       ;;
 
     ''*'-nr')
