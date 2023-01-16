@@ -1,19 +1,29 @@
 # This is the input configuration for 'completely' (https://github.com/DannyBen/completely)
-# to generate the bash completion script.
-# Sadly `completely` has limitations in the YAML configuration, making it impossible to have complex
-# arguments (more then one argument for an option). Therefore completion of options like `-repeat`
-# or `user` is only partially possible.
+# to generate the bash completion script for `sapcontrol`.
 #
-# 1. To generate the completion run: completely generate sapcontrol-completion.yaml sapcontrol.completion
-# 
-# 2. To use it ...
+# To generate the completion run: completely generate sapcontrol-completion.yaml sapcontrol.completion
+#
+# The following rules for the implemented completion apply:
+#
+#   - Options with multiple variable arguments (like `-repeat`) have at best only a completion
+#     for the first argument (limitation of shell globing).
+#   - Options where no sensible suggestions are possible (like `-function ParameterValue [<parameter>]`)
+#     have no completion.
+#   - If the meaning of an argument is not clear, no completion exists.
+#     (People with deeper SAP knowledge may contribute here!)  
 #
 #
-# v0.1
+# v0.3
+#
+#
+# Todo:         - Check if we can determine valid instance numbers easily.
 #
 # Changelog:    29.09.2022  v0.1  - Starting this huge task
+#               14.01.2023  v0.2  - extend implementation
+#               15.01.2023  v0.3  - so far everything implemented what seems possible
 # 
 # SYNOPSIS
+#
 #     sapcontrol [-prot <protocol>]
 #                [-trace <filename>]
 #                [-debug]
@@ -197,7 +207,7 @@
 #     CheckSystemCertificates <verifcation pse>
 
 
-sapcontrol: &base 
+sapcontrol:
   - -prot
   - -trace
   - -debug
@@ -223,13 +233,9 @@ sapcontrol *-prot:
 sapcontrol *-trace:
   - <file>
 
-# Currently we only suggest users, but not passwords ('-user <user> <password>')', due to `completely` limitations.
+# We only suggest users, but no passwords ('-user <user> <password>')'.
 sapcontrol *-user:
   - <user>
-
-# Currently we only support '<N>', but not '<D>' ('-repeat <N> <D>'), due to `completely` limitations. 
-sapcontrol *-repeat:
-  - $(echo '\-1' {1..9})
 
 sapcontrol *-format:
   - list
@@ -246,16 +252,8 @@ sapcontrol *-host:
 sapcontrol *-systempki:
   - <file>  
 
-sapcontrol *-tio:
-  - $(echo {0..9})
-
-sapcontrol *-tmax:
-  - $(echo {0..920})
-
-sapcontrol *-nr:
-  - '1'
-  - '2'
-  - '3'
+sapcontrol *-nr:  
+  - $(echo {00..98})
 
 sapcontrol *-function:
   - Start
@@ -386,64 +384,106 @@ sapcontrol *-function StartService:
 sapcontrol *-function ReadConfigFile:
   - <file>
 
-# THESE FUNCTIONS LACK THE PARAMETER IMPLEMENTATION:
-#
-#   - Start [runlevel]
-#   - InstanceStart <hostname> <instance number> [<runlevel>]
-#   - Bootstrap [<hostname> <instance number>]
-#   - Stop [softtimeout sec]
-#   - InstanceStop <hostname> <instance number> [<softtimeout sec>]
-#   - RestartInstance [<softtimeout sec> [<runlevel>]]
-#   - ParameterValue [<parameter>]
-#   - ReadDeveloperTrace <filename> <filesize>
-#   - ReadLogFile <filename> [<filter> [<language> [<maxentries> [<cookie>]]]]
-#   - AnalyseLogFiles [<severity 0..2> [<maxentries> [<starttime YYYY MM DD HH:MM:SS> <endtime YYYY MM DD HH:MM:SS>]]] 
-#   - ConfigureLogFileList set|add|remove [<filename1> <filename2>... <filenameN>]
-#   - CreateSnapshot [<description> [<datcol_param> [<analyse_severity -1..2> [<analyse_maxentries> [<analyse_starttime YYYY MM DD HH:MM:SS> <analyse_endtime YYYY MM DD HH:MM:SS> [<maxentries> [<filename1> ... <filenameN>]]]]]]]
-#   - ReadSnapshot <filename> [<local filename>]
-#   - DeleteSnapshots <filename1> [<filename2>... <filenameN>]
-#   - GetProcessParameter <processtype> [pid]
-#   - SetProcessParameter <processtype> <pid> <parameter> <value1> [<value2> ... <valueN>]
-#   - SetProcessParameter2 <processtype> <pid> [DYNAMIC|PERSIST|DYNAMIC_PERSIST] <parameter> <value1> [<value2> ... <valueN>]
-#   - CheckParameter [<profile> [<default profile>]]
-#   - OSExecute <command> <async> <timeout> <protocolfile>
-#   - SendSignal <pid> <signal>
-#   - GetCallstack <pid>
-#   - GetSystemInstanceList [<timeout sec>]
-#   - StartSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<runlevel>]]]
-#   - StopSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<softtimeout sec>]]]
-#   - RestartSystem [ALL|SCS|DIALOG|ABAP|J2EE|TREX|ENQREP|HDB|ALLNOHDB|LEVEL <level> [<waittimeout sec> [<softtimeout sec> [<runlevel>]]]]
-#   - UpdateSystem [<waittimeout sec> [<softtimeout sec> [<force>]]]
-#   - AccessCheck <function>
-#   - GetSecNetworkId <service_ip> <service_port> [<version> [<challenge>]]
-#   - GetNetworkId <service_ip> <service_port> [<version>]
-#   - RequestLogonFile <user>
-#   - UpdateSystemPKI [<force>]
-#   - UpdateInstancePSE [<force>]
-#   - StorePSE <server filename> <local filename> [<psemode> [<overwrite>]]
-#   - DeletePSE <filename>
-#   - CheckPSE <server filename> <local filename>
-#   - CreatePSECredential <server filename> <pin>
-#   - HAFailoverToNode <node>
-#   - HASetMaintenanceMode [<mode> [<instance_only>]]
-#   - HACheckMaintenanceMode [<instance_only>]
-#   - ABAPGetSystemWPTable [<activeonly>]
-#   - ABAPSetServerInactive [<inactive>]
-#   - J2EEControlProcess <processname> <function>
-#   - J2EEControlCluster <processname> <function> [<hostname> <instance number>]
-#   - J2EEEnableDbgSession <client> [<processname> <debugflags>]
-#   - J2EEDisableDbgSession <debugkey>
-#   - J2EEGetThreadCallStack [<threadindex>]
-#   - J2EEGetThreadTaskStack [<threadindex>]
-#   - J2EEControlComponents <process name> <operation> <componenttype> <componentname1>,...,<componentnameN>
-#   - EnqRemoveUserLocks <user>
-#   - GWCancelConnections <connection1> ... <connectionN>
-#   - GWDeleteConnections <connection1> ... <connectionN>
-#   - GWDeleteClients <client1> ... <clientN>
-#   - StartWait <timeout sec> <delay sec> [<runlevel>]
-#   - StopWait <timeout sec> <delay sec>
-#   - WaitforStarted <timeout sec> <delay sec>
-#   - WaitforStopped <timeout sec> <delay sec>
-#   - RestartServiceWait <timeout sec> <delay sec>
-#   - WaitforServiceStarted <timeout sec> <delay sec>
-#   - CheckSystemCertificates <verifcation pse>
+sapcontrol *-function DeletePSE:
+  - <file>
+
+# Only filename suggestion. No completion for second argument <filesize>
+sapcontrol *-function ReadDeveloperTrace:
+  - <file>
+
+sapcontrol *-function ConfigureLogFileList:
+  - set
+  - add
+  - remove 
+
+# Only the first file can be suggested.
+sapcontrol *-function ConfigureLogFileList set:
+  - <file>
+
+# Only the first file can be suggested.
+sapcontrol *-function ConfigureLogFileList add:
+  - <file>
+
+# Only the first file can be suggested.
+sapcontrol *-function ConfigureLogFileList remove:
+  - <file>
+
+# Only the first file can be suggested.
+sapcontrol *-function ReadSnapshot:
+  - <file>
+
+# Only the first file can be suggested.
+sapcontrol *-function DeleteSnapshots:
+  - <file>
+
+sapcontrol *-function GetCallstack:
+  - $(find /proc/ -maxdepth 1 -user "${USER}" -name '[0-9]*' -printf '%P ')
+
+# Only PID, but not signal gets suggested.
+sapcontrol *-function SendSignal:
+  - $(find /proc/ -maxdepth 1 -user "${USER}" -name '[0-9]*' -printf '%P ')
+
+# Only the first argument gets suggestions.
+sapcontrol *-function StartSystem:
+  - ALL
+  - SCS
+  - DIALOG
+  - ABAP
+  - J2EE
+  - TREX
+  - ENQREP
+  - HDB
+  - ALLNOHDB
+  - LEVEL
+
+# Only the first argument gets suggestions.
+sapcontrol *-function StopSystem:
+  - ALL
+  - SCS
+  - DIALOG
+  - ABAP
+  - J2EE
+  - TREX
+  - ENQREP
+  - HDB
+  - ALLNOHDB
+  - LEVEL
+
+# Only the first argument gets suggestions.
+sapcontrol *-function RestartSystem:
+  - ALL
+  - SCS
+  - DIALOG
+  - ABAP
+  - J2EE
+  - TREX
+  - ENQREP
+  - HDB
+  - ALLNOHDB
+  - LEVEL
+
+sapcontrol *-function RequestLogonFile:
+  - <user>
+
+sapcontrol *-function EnqRemoveUserLocks:
+  - <user>
+
+# Only the first argument gets suggestions.
+sapcontrol *-function InstanceStart:
+  - <hostname>
+
+# Only the first argument gets suggestions.
+sapcontrol *-function Bootstrap:
+  - <hostname>
+
+# Only the first argument gets suggestions.
+sapcontrol *-function InstanceStop:
+  - <hostname>
+
+# Only the first argument gets suggestions.
+sapcontrol *-function CheckParameter:
+  - <file>
+
+# Only the first argument gets suggestions.
+sapcontrol *-function OSExecute:
+  - <command>
