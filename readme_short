@@ -1,0 +1,24 @@
+# sapcontrol-bash-completion
+
+A simple (and incomplete) bash completion for the `sapcontrol` command.
+
+## Usage
+
+After the command `sapcontrol` has been typed, press `-` followed by `<TAB>` to get all the suggestions.
+Just `<TAB>` won't be enough, because only options exist as completion.
+
+## Limitations
+
+The generated completion has some limitations:
+
+- Options with multiple variable arguments (like `-repeat`) have at best only a completion
+  for the first argument (limitation of shell globing).
+
+- Options where no sensible suggestions are possible (like `-function ParameterValue [<parameter>]`) have no completion.
+
+- If the meaning of an argument is not clear, no completion exists.\
+  (People with deeper SAP knowledge may contribute here!)  
+
+## To Do
+
+- Fixing bugs and implement missing things (if people report them).
